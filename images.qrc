@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/book of money.jpg</file>
+        <file>img/psychology of money.jpg</file>
+        <file>img/rich dad poor dad.jpg</file>
+        <file>img/speak about money.jpg</file>
+    </qresource>
+</RCC>
