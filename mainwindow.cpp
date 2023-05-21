@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include "QString"
+#include "fstream"
+#include "QMessageBox"
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -91,15 +93,56 @@ void MainWindow::on_pay_clicked()
     ui->stackedWidget->setCurrentIndex(2);
 }
 
+struct receipt{
+    int receiptNumber;
+    QString customerName, cardNumber;
+};
 
 void MainWindow::on_confirm_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(3);
+    ofstream receiptFile;
+    receipt info;
+    info.receiptNumber = rand()%(1000000000 - 1000000 + 1) + 1000000;
+    info.customerName = ui->lineEdit_fullName->text();
+    info.cardNumber = ui->lineEdit_cardNumber->text();
+
+    receiptFile.open("salesdata.txt", ios::app);
+
+    if (receiptFile){
+        receiptFile << "Receipt Number:" << " " << info.receiptNumber << endl;
+        receiptFile << "Customer Name:" << " " << info.customerName.toStdString() << endl;
+        receiptFile << "Card Number:" << " " << info.cardNumber.toStdString()<< endl;
+        receiptFile << "----------------------------------------------------------"<<endl;
+        receiptFile << "Books \t\t\t\t Price"<<endl;
+
+        for (int i= 0; i <v.size(); i++){
+            receiptFile << v[i].itemName << "\t\t" << v[i].itemprice<<endl;
+        }
+        receiptFile << "Total: \t\t\t\t" << total << "\n\n\n " << "Thank You for the order \n\n\n";
+    }
+
+
+
+    QString fullName = ui->lineEdit_fullName->text();
+    QString cardnumber = ui->lineEdit_cardNumber->text();
+
+    if (cardnumber.toInt() < 5){
+        QMessageBox::warning(this, "title", "Enter correct card number");
+
+    }else{
+        ui->stackedWidget->setCurrentIndex(3);
+    }
+
 }
 
 
 void MainWindow::on_pushButton_new_clicked()
 {
+    ui->addeditems->clear();
+    ui->lineEdit_cardNumber->clear();
+    ui->lineEdit_fullName->clear();
+    v.clear();
+    total = 0;
     ui->stackedWidget->setCurrentIndex(0);
 }
 
